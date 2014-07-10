@@ -7,7 +7,7 @@ Sub makeTXT(prefix As String)
    
     Dim myFile As String    ' Variable for file name in file loop
     Dim count As Long       ' Count up for file loop
-    Dim aTexboxes()         ' Array with all cells
+    Dim aTextboxes()         ' Array with all cells
     Dim aField              ' Text of field to write, used in file loop
     Dim done As Boolean     ' for Dynamic array loop
     Dim i As Integer        ' counter for array loop
@@ -15,15 +15,15 @@ Sub makeTXT(prefix As String)
     ' initial value
     i = 0
     maxcount = 0
-    done = flase
+    done = False
       
     ' Fill array with data from excel sheet
     Do While Not done
 
         If Not IsEmpty(Cells(i + 1, 1)) Then
             maxcount = maxcount + 1
-            ReDim aTexboxes(maxcount - 1)
-            aTexboxes(i) = Cells(i + 1, 1)
+            ReDim Preserve aTextboxes(maxcount - 1)
+            aTextboxes(i) = Cells(i + 1, 1)
         Else
             done = True
         End If
@@ -31,7 +31,7 @@ Sub makeTXT(prefix As String)
     Loop
     
     ' Write array to files
-    For Each aField In aTexboxes
+    For Each aField In aTextboxes
         count = count + 1
         myFile = ".\txt\" & prefix & "\" & prefix & "_box" & count & ".txt" ' Formats as ./txt/Req X/Req X_box
         ' write

@@ -3,6 +3,7 @@ Sub VOCTest()
 ' VOCTest Macro
 '
 '
+    Call writeNumbers_Click
     Call Intro
     Call Req1
 End Sub
@@ -54,14 +55,15 @@ Private Sub txttodoc(prefix As String, start As Long)
     ' Intial value
     fileNr = 0
     amount = 0
-    ReDim atextfield(0)
+    text = ""
 
     Do While Not done
         fileNr = fileNr + 1
         myFile = ActiveDocument.Path & "\txt\" & prefix & "\" & prefix & "_box" & fileNr & ".txt"
+        text = ""
         If (Dir(myFile) > "") Then
             amount = amount + 1
-            ReDim atextfield(amount)
+            ReDim Preserve atextfield(amount - 1)
             Open myFile For Input As #1     ' Open file
             Do Until EOF(1)                 ' Read all lines
                 Line Input #1, textline     ' Read one line
@@ -77,19 +79,16 @@ Private Sub txttodoc(prefix As String, start As Long)
     ' Reset
     fileNr = 0
     done = False
+    text = ""
+    count = 0
     ' Go through all formtextinput fields
     For Each aField In ActiveDocument.FormFields
         If aField.Type = wdFieldFormTextInput Then
             count = count + 1
             ' Stop at formtextinput for this section
-            If count >= start And count <= start + amount Then
+            If count >= start And count < start + amount Then
+                text = atextfield(fileNr)             ' Reset value after last loop
                 fileNr = fileNr + 1     ' Start counting the files
-                text = ""               ' Reset value after last loop
-                ' Set the file name to read
-                myFile = ActiveDocument.Path & "\txt\" & prefix & "\" & prefix & "_box" & fileNr & ".txt"
-                
-
-                
                 ' Set word file formtextinput field to what was in the file
                 aField.Range.Fields(1).Result.text = text
             End If
@@ -109,5 +108,3 @@ End Sub
 Private Sub Req1()
     Call txttodoc("req_1", 348)
 End Sub
-
-
