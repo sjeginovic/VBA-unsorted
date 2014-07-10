@@ -3,19 +3,32 @@
 ' 10-7-2014 Daniel van den Akker
 '
 
-Sub makeTXT(prefix As String, maxcount As Long)
+Sub makeTXT(prefix As String)
    
     Dim myFile As String    ' Variable for file name in file loop
     Dim count As Long       ' Count up for file loop
     Dim aTexboxes()         ' Array with all cells
     Dim aField              ' Text of field to write, used in file loop
+    Dim done As Boolean     ' for Dynamic array loop
+    Dim i As Integer        ' counter for array loop
     
-    ReDim aTexboxes(maxcount - 1)
+    ' initial value
+    i = 0
+    maxcount = 0
+    done = flase
       
     ' Fill array with data from excel sheet
-    For i = 0 To maxcount - 1
-        aTexboxes(i) = Cells(i + 1, 1)
-    Next i
+    Do While Not done
+
+        If Not IsEmpty(Cells(i + 1, 1)) Then
+            maxcount = maxcount + 1
+            ReDim aTexboxes(maxcount - 1)
+            aTexboxes(i) = Cells(i + 1, 1)
+        Else
+            done = True
+        End If
+        i = i + 1
+    Loop
     
     ' Write array to files
     For Each aField In aTexboxes
@@ -31,8 +44,8 @@ Sub makeTXT(prefix As String, maxcount As Long)
 End Sub
 
 Sub tocompanytofile_Click()
-    Call makeTXT("intro", 43)
+    Call makeTXT("intro")
 End Sub
 Sub tofile_Click()
-    Call makeTXT("req_1", 84)
+    Call makeTXT("req_1")
 End Sub
